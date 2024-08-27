@@ -38,7 +38,7 @@ services:
     volumes:
       - '/etc/localtime:/etc/localtime:ro'
       - '${LOCALSTORAGE}/config/sonarr:/config'
-      - '${NASSTORAGE}:/media'
+      - '${NASSTORAGE}:/nas'
   radarr:
     container_name: radarr
     image: 'linuxserver/radarr:latest'
@@ -51,7 +51,7 @@ services:
     volumes:
       - '/etc/localtime:/etc/localtime:ro'
       - '${LOCALSTORAGE}/config/radarr:/config'
-      - '${NASSTORAGE}:/media'
+      - '${NASSTORAGE}:/nas'
       
   bazarr:
     container_name: bazarr
@@ -65,7 +65,7 @@ services:
       - UMASK_SET=022
     volumes:
       - '${LOCALSTORAGE}/config/bazarr:/config'
-      - '${NASSTORAGE}:/media'
+      - '${NASSTORAGE}:/nas'
     ports:
       - '6767:6767'
       
