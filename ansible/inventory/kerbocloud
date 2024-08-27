@@ -4,12 +4,12 @@ galadriel.kerbocloud.com
 celeborn.kerbocloud.com
 
 [vm-prod]
-docker-host-01
-cloudron
-k3s-server-01
-k3s-server-02
-k3s-server-03
-k3s-agent-01
-k3s-agent-02
-k3s-agent-03
-tf-test-01
+docker-host-01.kerbocloud.com
+guacamole.kerbocloud.com
+k3s-server-01.localdomain
+k3s-server-02.localdomain
+k3s-server-03.localdomain
+k3s-agent-01.localdomain
+k3s-agent-02.localdomain
+k3s-agent-03.localdomain
+tf-test-01.localdomain
