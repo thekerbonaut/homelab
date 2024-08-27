@@ -1,0 +1,82 @@
+version: '3.4'
+services:    
+  sabnzbd:
+    image: linuxserver/sabnzbd
+    ports:
+      - "8080:8080" # port mapping
+    volumes:
+      - '${LOCALSTORAGE}/config/sabnzbd:/config' # sab config directory
+      - '${NASSTORAGE}:/downloads' # completed directory for downloads. this contains the category directories
+      - '${LOCALSTORAGE}/incomplete:/incomplete-downloads' # "temp" directory for downloads
+    environment:
+      - 'TZ=${TZ}'
+      - 'PUID=${PUID}'
+      - 'PGID=${PGID}'
+
+  prowlarr:
+    image: lscr.io/linuxserver/prowlarr:latest
+    container_name: prowlarr
+    environment:
+      - 'PUID=${PUID}'
+      - 'PGID=${PGID}'
+      - 'TZ=${TZ}'
+    volumes:
+      - '${ROOT}/config/prowlarr:/config'
+    restart: unless-stopped
+    ports:
+      - '9696:9696'
+
+  sonarr:
+    container_name: sonarr
+    image: 'linuxserver/sonarr:latest'
+    restart: unless-stopped
+    network_mode: host
+    environment:
+      - 'PUID=${PUID}'
+      - 'PGID=${PGID}'
+      - 'TZ=${TZ}'
+    volumes:
+      - '/etc/localtime:/etc/localtime:ro'
+      - '${LOCALSTORAGE}/config/sonarr:/config'
+      - '${NASSTORAGE}:/media'
+  radarr:
+    container_name: radarr
+    image: 'linuxserver/radarr:latest'
+    restart: unless-stopped
+    network_mode: host
+    environment:
+      - 'PUID=${PUID}'
+      - 'PGID=${PGID}'
+      - 'TZ=${TZ}'
+    volumes:
+      - '/etc/localtime:/etc/localtime:ro'
+      - '${LOCALSTORAGE}/config/radarr:/config'
+      - '${NASSTORAGE}:/media'
+      
+  bazarr:
+    container_name: bazarr
+    image: 'linuxserver/bazarr:latest'
+    restart: unless-stopped
+    #network_mode: host
+    environment:
+      - 'PUID=${PUID}'
+      - 'PGID=${PGID}'
+      - 'TZ=${TZ}'
+      - UMASK_SET=022
+    volumes:
+      - '${LOCALSTORAGE}/config/bazarr:/config'
+      - '${NASSTORAGE}:/media'
+    ports:
+      - '6767:6767'
+      
+  overseerr:
+    image: 'sctx/overseerr:latest'
+    container_name: overseerr
+    environment:
+      - LOG_LEVEL=debug
+      - 'TZ=${TZ}'
+    ports:
+      - '5055:5055'
+    volumes:
+      - '${LOCALSTORAGE}/config/overseerr/config:/app/config'
+    restart: unless-stopped
