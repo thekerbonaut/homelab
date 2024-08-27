@@ -1,0 +1,14 @@
+[srv-prod]
+elrond.kerbocloud.com
+galadriel.kerbocloud.com
+celeborn.kerbocloud.com
+
+[vm-prod]
+docker-host-01
+cloudron
+k3s-server-01
+k3s-server-02
+k3s-server-03
+k3s-agent-01
+k3s-agent-02
+k3s-agent-03
