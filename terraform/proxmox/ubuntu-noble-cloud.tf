@@ -23,6 +23,6 @@ resource "proxmox_virtual_environment_vm" "ubuntu_vm" {
 resource "proxmox_virtual_environment_download_file" "ubuntu_cloud_image" {
   content_type = "iso"
   datastore_id = "local"
-  node_name    = "pve"
+  node_name    = "elrond"
   url          = "https://cloud-images.ubuntu.com/noble/current/noble-server-cloudimg-amd64.img"
 }
