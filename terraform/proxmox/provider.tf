@@ -1,15 +1,11 @@
-# Proxmox Provider
-# ---
-# Initial Provider Configuration for Proxmox
-
 terraform {
 
-    required_version = ">= 0.13.0"
+    required_version = ">= 1.9.5"
 
     required_providers {
         proxmox = {
-            source = "telmate/proxmox"
-            version = ">= 2.9.14"
+            source = "bpg/proxmox"
+            version = "0.63.0"
         }
     }
 }
@@ -26,13 +22,33 @@ variable "proxmox_api_token_secret" {
     type = string
 }
 
+variable "proxmox_api_token" {
+    type = string
+}
+
+variable "PUBLIC_SSH_KEY" {
+    type = string
+}
+
+variable "user" {
+    type = string
+}
+
+variable "pass" {
+    type = string
+}
+
 provider "proxmox" {
 
-    pm_api_url = var.proxmox_api_url
-    pm_api_token_id = var.proxmox_api_token_id
-    pm_api_token_secret = var.proxmox_api_token_secret
-
+    endpoint = var.proxmox_api_url
+    api_token = var.proxmox_api_token
     # (Optional) Skip TLS Verification
-    pm_tls_insecure = true
+    insecure = true
+    ssh {
+        agent = true
+        username = "root"
+    }
+
+    tmp_dir = "/var/tmp"
 
 }

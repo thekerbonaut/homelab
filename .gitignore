@@ -1,2 +1,2 @@
 *.env
-*.auto.tfvars
+*.tfvars
