@@ -38,17 +38,38 @@ variable "pass" {
     type = string
 }
 
+variable "proxmox_virtual_environment_endpoint_elrond" {
+    type = string
+}
+
+variable "proxmox_virtual_environment_endpoint_galadriel" {
+    type = string
+}
+
+variable "proxmox_virtual_environment_endpoint_celeborn" {
+    type = string
+}
+
+variable "proxmox_virtual_environment_username" {
+    type = string
+}
+
+variable "proxmox_virtual_environment_password" {
+    type = string
+}
+
 provider "proxmox" {
+  endpoint = var.proxmox_virtual_environment_endpoint_elrond
+  username = var.proxmox_virtual_environment_username
+  password = var.proxmox_virtual_environment_password
+  # because self-signed TLS certificate is in use
+  insecure = true
+  # uncomment (unless on Windows...)
+  tmp_dir  = "/var/tmp"
 
-    endpoint = var.proxmox_api_url
-    api_token = var.proxmox_api_token
-    # (Optional) Skip TLS Verification
-    insecure = true
-    ssh {
-        agent = true
-        username = "root"
-    }
-
-    tmp_dir = "/var/tmp"
-
+  ssh {
+    agent = true
+    # TODO: uncomment and configure if using api_token instead of password
+    # username = "root"
+  }
 }
