@@ -5,6 +5,10 @@ data "local_file" "ssh_public_key" {
 resource "proxmox_virtual_environment_vm" "k3s_nginx_lb" {
   name      = "k3s-nginx-lb"
   node_name = "celeborn"
+  
+  agent {
+    enabled = true
+  }
 
   initialization {
 
@@ -39,6 +43,10 @@ resource "proxmox_virtual_environment_vm" "k3s_master_01" {
   name      = "k3s-master-01"
   node_name = "celeborn"
 
+  agent {
+    enabled = true
+  }
+
   initialization {
 
     ip_config {
@@ -71,6 +79,10 @@ resource "proxmox_virtual_environment_vm" "k3s_master_01" {
 resource "proxmox_virtual_environment_vm" "k3s_agent_01" {
   name      = "k3s-agent-01"
   node_name = "celeborn"
+  
+  agent {
+    enabled = true
+  }
 
   initialization {
 
@@ -104,6 +116,10 @@ resource "proxmox_virtual_environment_vm" "k3s_agent_01" {
 resource "proxmox_virtual_environment_vm" "k3s_master_02" {
   name      = "k3s-master-02"
   node_name = "elrond"
+  
+  agent {
+    enabled = true
+  }
 
   initialization {
 
@@ -137,6 +153,10 @@ resource "proxmox_virtual_environment_vm" "k3s_master_02" {
 resource "proxmox_virtual_environment_vm" "k3s_agent_02" {
   name      = "k3s-agent-02"
   node_name = "elrond"
+  
+  agent {
+    enabled = true
+  }
 
   initialization {
 
@@ -170,6 +190,10 @@ resource "proxmox_virtual_environment_vm" "k3s_agent_02" {
 resource "proxmox_virtual_environment_vm" "k3s_master_03" {
   name      = "k3s-master-03"
   node_name = "galadriel"
+  
+  agent {
+    enabled = true
+  }
 
   initialization {
 
@@ -203,6 +227,10 @@ resource "proxmox_virtual_environment_vm" "k3s_master_03" {
 resource "proxmox_virtual_environment_vm" "k3s_agent_03" {
   name      = "k3s-agent-03"
   node_name = "galadriel"
+  
+  agent {
+    enabled = true
+  }
 
   initialization {
 
