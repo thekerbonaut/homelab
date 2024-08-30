@@ -1,4 +1,4 @@
-- hosts: "{{ hosts }}"
+- hosts: "ubuntu_vms,k3s_cluster"
 
   become: yes
   tasks:
