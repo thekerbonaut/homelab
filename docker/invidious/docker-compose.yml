@@ -21,8 +21,16 @@ services:
         check_tables: true
         # external_port:
         # domain:
-        # https_only: false
-        # statistics_enabled: false
+        https_only: true
+        statistics_enabled: true
+        registration_enabled: false
+        admins: ["${ADMIN}"]
+        dark_mode: "dark"
+        autoplay: true
+        continue: true
+        quality: dash
+        quality_dash: auto
+        save_player_pos: true
         hmac_key: ${HMAC_KEY}
     healthcheck:
       test: wget -nv --tries=1 --spider http://127.0.0.1:3000/api/v1/trending || exit 1
