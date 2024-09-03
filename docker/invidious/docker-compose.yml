@@ -23,7 +23,7 @@ services:
         # domain:
         # https_only: true
         statistics_enabled: true
-        registration_enabled: false
+        registration_enabled: true
         admins: ${ADMIN}
         dark_mode: "dark"
         autoplay: true
