@@ -24,7 +24,7 @@ services:
         # https_only: true
         statistics_enabled: true
         registration_enabled: false
-        admins: ["${ADMIN}"]
+        admins: ${ADMIN}
         dark_mode: "dark"
         autoplay: true
         continue: true
