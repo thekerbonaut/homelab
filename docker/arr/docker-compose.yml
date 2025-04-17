@@ -152,5 +152,6 @@ services:
       - 'TZ=${TZ}'
     volumes:
       - '${LOCALSTORAGE}/cailbre:/config'
+      - '${NASSTORAGE}:/downloads'
       - '${NASSTORAGE}/books:/books'
     restart: unless-stopped
