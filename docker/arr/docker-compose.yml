@@ -134,7 +134,7 @@ services:
       - 'PGID=${PGID}'
       - 'TZ=${TZ}'
     volumes:
-      - '${LOCALSTORAGE}/readarr:/config"
+      - '${LOCALSTORAGE}/readarr:/config'
       - '${NASSTORAGE}/books:/books'
     ports:
       - '8787:8787'
@@ -151,6 +151,6 @@ services:
       - 'PGID=${PGID}'
       - 'TZ=${TZ}'
     volumes:
-      - '${LOCALSTORAGE}/cailbre:/config"
+      - '${LOCALSTORAGE}/cailbre:/config'
       - '${NASSTORAGE}/books:/books'
     restart: unless-stopped
