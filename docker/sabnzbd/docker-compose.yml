@@ -1,0 +1,15 @@
+version: '3.4'
+services:    
+  sabnzbd:
+    image: linuxserver/sabnzbd
+    ports:
+      - "8080:8080" # port mapping
+    volumes:
+      - '${LOCALSTORAGE}/config/sabnzbd:/config' # sab config directory
+      - '${NASSTORAGE}:/downloads' # completed directory for downloads. this contains the category directories
+      - '${LOCALSTORAGE}/incomplete:/incomplete-downloads' # "temp" directory for downloads
+    environment:
+      - 'TZ=${TZ}'
+      - 'PUID=${PUID}'
+      - 'PGID=${PGID}'
+    restart: unless-stopped
