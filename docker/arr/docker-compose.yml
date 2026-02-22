@@ -61,6 +61,8 @@ services:
     init: true
     container_name: seerr
     environment:
+      - 'PUID=${PUID}'
+      - 'PGID=${PGID}'
       - LOG_LEVEL=debug
       - 'TZ=${TZ}'
       - PORT=5055
