@@ -5,7 +5,7 @@ services:
     container_name: plextraktsync
     restart: on-failure:2
     volumes:
-      - ./config:/app/config
+      - ${LOCALSTORAGE}/config/plextraktsync/config:/app/config
     environment:
       - PUID=${PUID}
       - PGID=${PGID}
