@@ -18,5 +18,16 @@ services:
       - JELLYFIN_PublishedServerUrl=http://jellyfin.kerbocloud.com
     # Optional - may be necessary for docker healthcheck to pass if running in host network mode
     extra_hosts:
-
       - 'host.docker.internal:host-gateway'
+      
+  plextraktsync:
+    image: ghcr.io/taxel/plextraktsync
+    command: sync
+    container_name: plextraktsync
+    restart: on-failure:2
+    volumes:
+      - ./config:/app/config
+    environment:
+      - PUID=${PUID}
+      - PGID=${PGID}
+      - TZ=${TZ}
