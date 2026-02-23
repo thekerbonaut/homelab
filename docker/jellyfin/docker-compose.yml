@@ -1,0 +1,20 @@
+  jellyfin:
+    image: jellyfin/jellyfin
+    container_name: jellyfin
+    # Optional - specify the uid and gid you would like Jellyfin to use instead of root
+    user: ${PUID}:${PGID}
+    ports:
+      - "8096:8096"
+      - "7359:7359"
+    volumes:
+      - ${LOCALSTORAGE}/config/jellyfin/config:/config
+      - ${LOCALSTORAGE}/config/jellyfin//cache:/cache
+      - ${NASSTORAGE}/tv:/libraries/tv:/tv
+      - ${NASSTORAGE}/movies:/libraries/movies:/movies
+    restart: 'unless-stopped'
+    # Optional - alternative address used for autodiscovery
+    environment:
+      - JELLYFIN_PublishedServerUrl=http://jellyfin.kerbocloud.com
+    # Optional - may be necessary for docker healthcheck to pass if running in host network mode
+    extra_hosts:
+      - 'host.docker.internal:host-gateway'
