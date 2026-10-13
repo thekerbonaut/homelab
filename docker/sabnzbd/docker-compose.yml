@@ -50,7 +50,7 @@ services:
     # ─── Exposed Ports ─────────────────────────────────────────────────
     ports:
       - "9090:9090"  # Exposes qBittorrent Web UI to localhost
-      - "8080:8080" # Exposes sabnzbd Web UI to localhost
+      - "8181:8080" # Exposes sabnzbd Web UI to localhost
 
     # ─── Health Check ──────────────────────────────────────────────────
     healthcheck:
