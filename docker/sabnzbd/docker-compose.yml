@@ -92,8 +92,7 @@ services:
     
     volumes:
       - ./qbittorrent:/config   # Stores qBittorrent settings persistently
-      - /share/multimedia/torrents/incomplete:/incomplete  # ⚡ Temporary download location (reduces SSD wear)
-      - /share/multimedia/torrents/downloads:/downloads  # ✅ Completed torrents move here
+      - ${NASSTORAGE}:/gimli-media:/gimli-media
 
     # ─── Performance Optimization ──────────────────────────────────────
     ulimits:
@@ -115,8 +114,7 @@ services:
         condition: service_healthy  # Ensures sabnzbd starts only when the VPN is fully functional
     volumes:
       - ./sabnzbd:/config   # Stores qBittorrent settings persistently
-      - /share/multimedia/usenet/incomplete:/incomplete  # ⚡ Temporary download location (reduces SSD wear)
-      - /share/multimedia/usenet/downloads:/downloads  # ✅ Completed torrents move here
+      - ${NASSTORAGE}:/gimli-media:/gimli-media
     environment:
       - 'TZ=${TZ}'
       - 'PUID=${PUID}'
