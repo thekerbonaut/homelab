@@ -122,7 +122,6 @@ services:
       - 'TZ=${TZ}'
       - 'PUID=${PUID}'
       - 'PGID=${PGID}'
-    restart: unless-stopped
 
 volumes:
   gluetun-config:  # Stores VPN settings
