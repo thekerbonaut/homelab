@@ -130,6 +130,7 @@ services:
     environment:
       - 'TZ=${TZ}'
       - 'MOUSEHOLE_AUTH_PASSWORD=${MOUSEHOLE_PW}'
+      - 'MOUSEHOLE_ALLOWED_HOSTS=${ALLOWED_IP}'
     volumes:
       # persist cookie data across container restarts
       - "./mousehole:/var/lib/mousehole"
