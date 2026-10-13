@@ -129,7 +129,7 @@ services:
         condition: service_healthy # wait for the VPN tunnel before attaching
     environment:
       - 'TZ=${TZ}'
-      - 'MOUSEHOLE_AUTH_PASSWORD=zfhW97AsrEL4hx6RThk3HQmd7kmtYZL3'
+      - 'MOUSEHOLE_AUTH_PASSWORD=${MOUSEHOLE_PW}'
     volumes:
       # persist cookie data across container restarts
       - "mousehole:/var/lib/mousehole"
