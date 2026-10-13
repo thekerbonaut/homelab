@@ -1,4 +1,3 @@
-version: '3.4'
 services:    
   plex:
     image: plexinc/pms-docker:latest # Set specific: plexinc/pms-docker:1.40.2.8395-c67dce28e
@@ -27,9 +26,10 @@ services:
       #- NVIDIA_DRIVER_CAPABILITIES=all
     volumes:
       - /etc/localtime:/etc/localtime:ro # Sync the container's time to the host's time
-      - '${LOCALSTORAGE}/config/plexmediaserver:/config' # Plex server application data is stored in a folder called 'plexmediaserver' in the same directory as the docker-compose.yaml file
+      - ./plexmediaserver:/config # Plex server application data is stored in a folder called 'plexmediaserver' in the same directory as the docker-compose.yaml file
       # Uncomment the lines below for each library,
       # make sure the path on the left of the colon (:) exists on the host! `/mnt/tv`
+      - ${NASSTORAGE}/home_media:/libraries/home_media
       - ${NASSTORAGE}/tv:/libraries/tv
       - ${NASSTORAGE}/movies:/libraries/movies
       #- ${NASSTORAGE}/music:/mnt/music
