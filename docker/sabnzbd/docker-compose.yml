@@ -1,15 +1,129 @@
-version: '3.4'
-services:    
+# ──────────────────────────────────────────────────────────────────────
+# 📌 Docker Compose Configuration for Secure qBittorrent with VPN
+# ──────────────────────────────────────────────────────────────────────
+# ✅ Runs qBittorrent behind Gluetun (VPN) for security & privacy
+# ✅ Ensures all qBittorrent traffic is routed ONLY through the VPN
+# ✅ Exposes the Web UI (http://localhost:8080) properly
+# ✅ Uses a separate storage system for incomplete and completed torrents
+# ✅ Includes Watchtower for optional automatic container updates
+# ✅ Optimized for security, performance, and maintainability
+# ✅ Requires an `.env` file to store sensitive credentials (see README)
+# ──────────────────────────────────────────────────────────────────────
+
+
+services:
+
+  # ──────────────────────────────────────────────────────────────────────
+  # 🛡️ VPN CONTAINER (Gluetun) - Provides a secure connection via ProtonVPN
+  # ──────────────────────────────────────────────────────────────────────
+  gluetun:
+    image: ghcr.io/qdm12/gluetun:latest  # Uses the latest Gluetun VPN image
+    container_name: gluetun  # Assigns a fixed name to the container for easy reference
+
+    restart: unless-stopped  # Ensures Gluetun restarts if it crashes
+
+    # ─── Networking Permissions ─────────────────────────────────────────
+    cap_add:
+      - NET_ADMIN  # Grants networking privileges required for VPN operation
+
+    devices:
+      - /dev/net/tun:/dev/net/tun  # Enables VPN tunneling inside the container
+
+    sysctls:
+      - net.ipv6.conf.all.disable_ipv6=1  # Disables IPv6 to prevent leaks
+
+    # ─── VPN Configuration ─────────────────────────────────────────────
+    environment:
+      - VPN_SERVICE_PROVIDER=protonvpn  # Specifies ProtonVPN as the VPN provider
+      - VPN_TYPE=wireguard  # Uses WireGuard as the VPN protocol
+      - WIREGUARD_PRIVATE_KEY=${WIREGUARD_PRIVATE_KEY}  # Private key for authentication (from .env)
+      - SERVER_COUNTRIES=${SERVER_COUNTRIES}  # Preferred VPN server country selection
+      - SERVER_CITIES=${SERVER_CITIES}  # (Optional) Restrict to a specific city
+      - VPN_PORT_FORWARDING=on  # Enables automatic port forwarding (needed for torrenting)
+      - TZ=${TZ}  # Sets the timezone for correct timestamps in logs
+      - QBT_WEBUI_ENABLED=true  # ✅ Ensures Web UI is always enabled
+
+    # ─── Persistent Storage ────────────────────────────────────────────
+    volumes:
+      - gluetun-config:/gluetun  # Stores VPN configuration persistently
+
+    # ─── Exposed Ports ─────────────────────────────────────────────────
+    ports:
+      - "9090:9090"  # ✅ Exposes qBittorrent Web UI to localhost
+
+    # ─── Health Check ──────────────────────────────────────────────────
+    healthcheck:
+      test: ["CMD", "wget", "--spider", "-q", "http://google.com"]  # Checks if the VPN connection is active
+      interval: 30s  # Runs every 30 seconds
+      timeout: 10s  # Fails if it takes longer than 10 seconds
+      retries: 3  # Allows 3 failures before marking the container as unhealthy
+
+  # ──────────────────────────────────────────────────────────────────────
+  # 📂 TORRENT CLIENT (qBittorrent) - Secure Torrent Downloading & Seeding
+  # ──────────────────────────────────────────────────────────────────────
+  qbittorrent:
+    image: lscr.io/linuxserver/qbittorrent:latest  # Uses the latest qBittorrent image
+    container_name: qbittorrent  # Assigns a fixed name to the container
+
+    restart: unless-stopped  # Ensures qBittorrent restarts if it crashes
+
+    # ─── Network Configuration ─────────────────────────────────────────
+    network_mode: "service:gluetun"  # 🔒 Ensures qBittorrent ONLY works through the VPN (Prevents leaks)
+    
+    depends_on:
+      gluetun:
+        condition: service_healthy  # Ensures qBittorrent starts only when the VPN is fully functional
+
+    # ─── qBittorrent Configuration ─────────────────────────────────────
+    environment:
+      - PUID=${PUID}  # User ID (ensures correct file permissions)
+      - PGID=${PGID}  # Group ID (ensures correct file ownership)
+      - TZ=${TZ}  # Timezone for logs and schedules
+      - WEBUI_PORT=9090  # Sets qBittorrent's Web UI to port 8080
+      - QBITTORRENT_INTERFACE=tun0  # 🔒 Forces all traffic through VPN interface
+     
+     # 🔄 Port Forwarding Mod (Syncs qBittorrent with Gluetun)
+      - DOCKER_MODS=ghcr.io/t-anc/gsp-qbittorent-gluetun-sync-port-mod:main
+      - GSP_GTN_API_KEY=${GSP_GTN_API_KEY:-randomapikey}  # API key for port forwarding updates
+      - GSP_QBITTORRENT_PORT=${GSP_QBITTORRENT_PORT:-53764}  # Torrenting port (auto-updated by Gluetun)
+      - GSP_MINIMAL_LOGS=false  # Enables full logs for debugging purposes
+    # ─── Persistent Storage ────────────────────────────────────────────
+    
+    volumes:
+      - ./qbittorrent:/config   # Stores qBittorrent settings persistently
+      - /share/multimedia/torrents/incomplete:/incomplete  # ⚡ Temporary download location (reduces SSD wear)
+      - /share/multimedia/torrents/downloads:/downloads  # ✅ Completed torrents move here
+
+    # ─── Performance Optimization ──────────────────────────────────────
+    ulimits:
+      nofile:
+        soft: 32768
+        hard: 65536  # Increases allowed open files (important for high-speed torrenting)
+
   sabnzbd:
     image: linuxserver/sabnzbd
+    container_name: sabnzbd  # Assigns a fixed name to the container
+
+    restart: unless-stopped  # Ensures sabnzbd restarts if it crashes
+
+    # ─── Network Configuration ─────────────────────────────────────────
+    network_mode: "service:gluetun"  # 🔒 Ensures sabnzbd ONLY works through the VPN (Prevents leaks)
+    
+    depends_on:
+      gluetun:
+        condition: service_healthy  # Ensures sabnzbd starts only when the VPN is fully functional
     ports:
       - "8080:8080" # port mapping
     volumes:
-      - '${LOCALSTORAGE}/config/sabnzbd:/config' # sab config directory
-      - '${NASSTORAGE}:/downloads' # completed directory for downloads. this contains the category directories
-      - '${LOCALSTORAGE}/incomplete:/incomplete-downloads' # "temp" directory for downloads
+      - ./sabnzbd:/config   # Stores qBittorrent settings persistently
+      - /share/multimedia/usenet/incomplete:/incomplete  # ⚡ Temporary download location (reduces SSD wear)
+      - /share/multimedia/usenet/downloads:/downloads  # ✅ Completed torrents move here
     environment:
       - 'TZ=${TZ}'
       - 'PUID=${PUID}'
       - 'PGID=${PGID}'
     restart: unless-stopped
+
+volumes:
+  gluetun-config:  # Stores VPN settings
+  qbittorrent-config:  # Stores qBittorrent configuration    
