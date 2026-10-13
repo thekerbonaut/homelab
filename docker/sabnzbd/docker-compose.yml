@@ -51,6 +51,7 @@ services:
     ports:
       - "9090:9090"  # Exposes qBittorrent Web UI to localhost
       - "8181:8080" # Exposes sabnzbd Web UI to localhost
+      - "5010:5010" # Exposes Mousehole Web UI to localhost
 
     # ─── Health Check ──────────────────────────────────────────────────
     healthcheck:
@@ -119,6 +120,20 @@ services:
       - 'TZ=${TZ}'
       - 'PUID=${PUID}'
       - 'PGID=${PGID}'
+
+  mousehole:
+    image: tmmrtn/mousehole:latest
+    network_mode: "service:gluetun"
+    depends_on:
+      gluetun:
+        condition: service_healthy # wait for the VPN tunnel before attaching
+    environment:
+      - 'TZ=${TZ}'
+      - 'MOUSEHOLE_AUTH_PASSWORD=zfhW97AsrEL4hx6RThk3HQmd7kmtYZL3'
+    volumes:
+      # persist cookie data across container restarts
+      - "mousehole:/var/lib/mousehole"
+    restart: unless-stopped
 
 volumes:
   gluetun-config:  # Stores VPN settings
