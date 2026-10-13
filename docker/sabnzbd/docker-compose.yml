@@ -132,7 +132,7 @@ services:
       - 'MOUSEHOLE_AUTH_PASSWORD=${MOUSEHOLE_PW}'
     volumes:
       # persist cookie data across container restarts
-      - "mousehole:/var/lib/mousehole"
+      - "./mousehole:/var/lib/mousehole"
     restart: unless-stopped
 
 volumes:
