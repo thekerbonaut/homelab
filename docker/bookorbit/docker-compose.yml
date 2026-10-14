@@ -36,7 +36,7 @@ services:
         condition: service_healthy
     volumes:
       - ${BOOKS_HOST_PATH:-./books}:/books
-      - ./data/app:/data
+      - /share/multimedia/docker/bookorbit/data/app:/data
     read_only: true
     tmpfs:
       - /tmp
@@ -86,7 +86,7 @@ services:
       POSTGRES_DB: ${POSTGRES_DB?required}
       PGDATA: /var/lib/postgresql/data/pgdata
     volumes:
-      - ./data/postgres:/var/lib/postgresql/data
+      - /share/multimedia/docker/bookorbit/data/postgres:/var/lib/postgresql/data
     healthcheck:
       test:
         ["CMD-SHELL", 'pg_isready -U "$${POSTGRES_USER}" -d "$${POSTGRES_DB}"']
