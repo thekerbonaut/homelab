@@ -46,6 +46,7 @@ services:
     # ─── Persistent Storage ────────────────────────────────────────────
     volumes:
       - gluetun-config:/gluetun  # Stores VPN configuration persistently
+      - /data/stacks/downloaders/gluetun/gluetun-auth/config.toml:/gluetun/auth/config.toml:ro
 
     # ─── Exposed Ports ─────────────────────────────────────────────────
     ports:
@@ -86,7 +87,7 @@ services:
      
      # 🔄 Port Forwarding Mod (Syncs qBittorrent with Gluetun)
       - DOCKER_MODS=ghcr.io/t-anc/gsp-qbittorent-gluetun-sync-port-mod:main
-      - GSP_GTN_API_KEY=${GSP_GTN_API_KEY:-randomapikey}  # API key for port forwarding updates
+      - GSP_GTN_API_KEY=${GSP_GTN_API_KEY}  # API key for port forwarding updates
       - GSP_QBITTORRENT_PORT=${GSP_QBITTORRENT_PORT:-53764}  # Torrenting port (auto-updated by Gluetun)
       - GSP_MINIMAL_LOGS=false  # Enables full logs for debugging purposes
     # ─── Persistent Storage ────────────────────────────────────────────
